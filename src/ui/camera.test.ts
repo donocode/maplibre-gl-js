@@ -1916,6 +1916,17 @@ describe('#cameraForBounds', () => {
 
         expect(fixedLngLat(transform.center, 4)).toEqual({lng: -103.3761, lat: 43.0929});
     });
+
+    test('bounds crossing prime meridian', () => {
+        const camera = createCamera();
+        const bb = [[178.577174, -47.289993],
+            [-176.893092, -33.958498]];
+
+        const transform = camera.cameraForBounds(bb);
+
+        expect(fixedLngLat(transform.center, 4)).toEqual({lng: 180.842, lat: -40.9596});
+        expect(fixedNum(transform.zoom, 3)).toBe(4.349);
+    });
 });
 
 describe('#fitBounds', () => {

@@ -523,6 +523,13 @@ abstract class Camera extends Evented {
      */
     cameraForBounds(bounds: LngLatBoundsLike, options?: CameraForBoundsOptions): CenterZoomBearing {
         bounds = LngLatBounds.convert(bounds);
+
+        // if the bounds span the antimeridian then transform the north east bound
+        // to be > 180 to allow the camera to be placed correctly
+        if (bounds.getEast() < bounds.getWest()) {
+            bounds.setNorthEast(new LngLat(360 + bounds.getEast(), bounds.getNorth()));
+        }
+
         const bearing = options && options.bearing || 0;
         return this._cameraForBoxAndBearing(bounds.getNorthWest(), bounds.getSouthEast(), bearing, options);
     }
